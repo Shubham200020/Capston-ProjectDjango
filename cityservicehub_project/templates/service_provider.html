@@ -1,0 +1,603 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Service Provider Profile — Dynamic Frontend</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/stylee.css' %}"></head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand fw-bold text-white" href="#">City Service Hub</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center">
+              <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
+              <li class="nav-item ms-3">
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">+ Login</a>          </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+<div class="container mt-3 mb-5">
+  <div class="profile-header d-flex flex-wrap justify-content-between align-items-center p-4 mb-4">
+    <div class="d-flex align-items-start flex-wrap">
+      <div class="text-center me-4">
+        <img src="https://i.pravatar.cc/120?img=3" class="rounded-circle mb-2 border border-2 border-light" alt="Owner" width="120" height="120">
+        <h4 class="text-white fw-semibold mb-1">Christine Evans</h4>
+        <p class="text-muted mb-0">Service Provider - City Service Hub</p>
+      </div>
+      <div class="text-start" style="margin-top:80px;">
+        <p class="mb-1 text-white "><strong>📞</strong> +44 20 7336 8898</p>
+        <p class="mb-1 text-white "><strong>🌐</strong> hwe@gmail.com</p>
+        <p class="mb-1 text-white "><strong>📍</strong> Doyers St, New York, NY 10013</p>
+      </div>
+    </div>
+
+    <div class="text-end mt-5 mb-0">
+      <button class="btn btn-outline-warning mb-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">+ Edit Profile</button><br>
+      <div class="text-end mb-3">
+        <button id="openAddServiceBtn" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+          + Add Service
+        </button>
+      </div>
+      <button class="btn btn-outline-pink">Write a Review</button>
+    </div>
+  </div>
+
+  <div id="servicesRow" class="row g-4 mt-3">
+    <!-- service cards will be injected here -->
+  </div>
+
+  <div class="reviews-section mt-4">
+    <h4>Customer Reviews (34)</h4>
+
+    <div class="review-card">
+      <div class="review-header d-flex justify-content-between align-items-center">
+        <div>
+          <h6 class="mb-1">Amanda G</h6>
+          <small class="text-muted">Reviewed 2 days ago</small>
+        </div>
+        <span class="review-rating">8.0</span>
+      </div>
+      <div class="review-text mt-2">Best noodles in New York City! Staff is friendly, and the food quality is top-notch.</div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-header d-flex justify-content-between align-items-center">
+        <div>
+          <h6 class="mb-1">Kevin W</h6>
+          <small class="text-muted">Reviewed 3 months ago</small>
+        </div>
+        <span class="review-rating" style="background-color:#dc3545; padding:6px 8px; border-radius:6px;">2.0</span>
+      </div>
+      <div class="review-text mt-2">The dumplings were greasy and the shrimp noodles were difficult to eat.</div>
+    </div>
+  </div>
+
+  <footer class="text-center py-4 mt-5 text-muted">
+    <small>© 2025 ServiceHub. All rights reserved.</small>
+  </footer>
+</div>
+
+<!-- Edit Profile Modal (keeps minimal) -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content text-light" style="background: rgba(0,0,0,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px;">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-semibold text-white">Edit Profile</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="profileForm" class="p-3">
+          <div class="mb-3">
+            <label class="form-label text-light">Full Name</label>
+            <input type="text" class="form-control" id="pf_name" value="Christine Evans">
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-light">Phone</label>
+            <input type="text" class="form-control" id="pf_phone" value="+44 20 7336 8898">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-pink" data-bs-dismiss="modal" id="saveProfileBtn">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Service Modal -->
+<div class="modal fade" id="addServiceModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content text-light" style="background: rgba(0,0,0,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:10px;">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-semibold text-white">Add New Service</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="addServiceForm" class="p-3">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label text-light">Service Name</label>
+              <input type="text" class="form-control" id="svc_name" placeholder="Enter service name" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Service Type</label>
+              <select id="svc_type" class="form-select">
+                <option value="">Select Type</option>
+                <option value="tiffin">Tiffin Service</option>
+                <option value="laundry">Laundry</option>
+                <option value="water">Water Supplier</option>
+                <option value="cook">Cook</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label text-light">Description</label>
+              <textarea class="form-control" id="svc_desc" rows="2" placeholder="Enter service details"></textarea>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Address</label>
+              <input type="text" class="form-control" id="svc_addr" placeholder="Enter address">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Contact Number</label>
+              <input type="text" class="form-control" id="svc_phone" placeholder="Enter phone number">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Opening Time</label>
+              <input type="time" class="form-control" id="svc_open_time">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Closing Time</label>
+              <input type="time" class="form-control" id="svc_close_time">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Upload Service Image</label>
+              <input type="file" class="form-control" accept="image/*" id="svc_image">
+            </div>
+
+            <div class="col-12">
+              <label class="form-label text-light">Menu Items (Name — Price)</label>
+              <div id="svc_menu_rows" class="mb-2">
+                <!-- initial row -->
+              </div>
+              <p class="small text-muted">Use the (+) button on the right of a row to add a new item. Use the trash icon to remove a row.</p>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer border-0">
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-pink" id="saveServiceBtn">Save Service</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Service Modal (shared UI for editing existing) -->
+<div class="modal fade" id="editServiceModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content text-light" style="background: rgba(0,0,0,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:10px;">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-semibold text-white">Edit Service</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="editServiceForm" class="p-3">
+          <input type="hidden" id="edit_svc_id">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label text-light">Service Name</label>
+              <input type="text" class="form-control" id="edit_svc_name">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Service Type</label>
+              <select id="edit_svc_type" class="form-select">
+                <option value="">Select Type</option>
+                <option value="tiffin">Tiffin Service</option>
+                <option value="laundry">Laundry</option>
+                <option value="water">Water Supplier</option>
+                <option value="cook">Cook</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label text-light">Description</label>
+              <textarea class="form-control" id="edit_svc_desc" rows="2"></textarea>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Address</label>
+              <input type="text" class="form-control" id="edit_svc_addr">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Contact Number</label>
+              <input type="text" class="form-control" id="edit_svc_phone">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Opening Time</label>
+              <input type="time" class="form-control" id="edit_svc_open">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-light">Closing Time</label>
+              <input type="time" class="form-control" id="edit_svc_close">
+            </div>
+
+            <div class="col-12">
+              <label class="form-label text-light">Menu Items (Name — Price)</label>
+              <div id="edit_svc_menu_rows" class="mb-2"></div>
+              <p class="small text-muted">Use the (+) button on the right of a row to add a new item. Use the trash icon to remove a row.</p>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer border-0">
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-pink" id="updateServiceBtn">Update Service</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(() => {
+  const servicesRow = document.getElementById('servicesRow');
+
+  let services = JSON.parse(localStorage.getItem('services_v1') || '[]');
+
+  function saveServices() {
+    localStorage.setItem('services_v1', JSON.stringify(services));
+  }
+
+  function uid(prefix='id') {
+    return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  }
+
+  function timeToMinutes(t) {
+    if(!t) return null;
+    const [h,m] = t.split(':').map(Number);
+    return h*60 + m;
+  }
+
+  function isOpenNow(openTime, closeTime) {
+    if(!openTime || !closeTime) return false;
+    const now = new Date();
+    const minutes = now.getHours()*60 + now.getMinutes();
+    const o = timeToMinutes(openTime);
+    const c = timeToMinutes(closeTime);
+    if(o <= c) return (minutes >= o && minutes < c);
+    // overnight (close next day)
+    return (minutes >= o || minutes < c);
+  }
+
+  function renderServices() {
+    servicesRow.innerHTML = '';
+    services.forEach(svc => {
+      const col = document.createElement('div');
+      col.className = 'col-md-6 col-lg-4';
+      const menuId = uid('menu');
+      const openNow = isOpenNow(svc.openTime, svc.closeTime);
+      const openText = svc.openTime ? svc.openTime : '--';
+      const closeText = svc.closeTime ? svc.closeTime : '--';
+      col.innerHTML = `
+        <div class="service-card position-relative">
+          <img src="${svc.imageData || 'slider.jpg'}" alt="${escapeHtml(svc.name)}">
+          <div class="rating-badge bg-warning"> ${svc.rating ?? '—'} </div>
+          <div class="p-3">
+            <h5>${escapeHtml(svc.name)}</h5>
+            <p>${escapeHtml(svc.type || '')} • ${svc.reviews ?? 0} Reviews • ${'$$'}</p>
+            <p>${escapeHtml(svc.address || '')}</p>
+            <p>${escapeHtml(svc.phone || '')}</p>
+
+            <p class="mb-1"><strong>Opening Time:</strong> ${openText}</p>
+            <p class="mb-2"><strong>Closing Time:</strong> ${closeText}</p>
+
+            <p class="text-muted small mb-1">${escapeHtml(svc.website || '')}</p>
+            <p class="fw-semibold mb-2" style="color:${openNow?'#28a745':'#dc3545'}">${openNow? 'OPEN NOW':'CLOSED NOW'}</p>
+
+            <div class="menu-section mb-3">
+              <button class="btn btn-outline-info btn-sm w-100" data-bs-toggle="collapse" data-bs-target="#${menuId}" aria-controls="${menuId}">
+                Menu ▾
+              </button>
+              <div class="collapse mt-2" id="${menuId}">
+                <ul class="list-group small" id="menu-list-${svc.id}">
+                </ul>
+              </div>
+            </div>
+
+            <div class="service-actions">
+              <button class="btn btn-outline-success btn-sm edit-svc-btn" data-id="${svc.id}">Edit</button>
+              <button class="btn btn-outline-danger btn-sm delete-svc-btn" data-id="${svc.id}">Delete</button>
+            </div>
+          </div>
+        </div>
+      `;
+      servicesRow.appendChild(col);
+
+      const menuList = document.getElementById(`menu-list-${svc.id}`);
+      if(svc.menu && svc.menu.length){
+        svc.menu.forEach(item => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item d-flex justify-content-between align-items-center';
+          li.innerHTML = `<span>${escapeHtml(item.name)}</span><strong>₹${escapeHtml(item.price)}</strong>`;
+          menuList.appendChild(li);
+        });
+      } else {
+        const li = document.createElement('li');
+        li.className = 'list-group-item text-muted';
+        li.textContent = 'No menu items';
+        menuList.appendChild(li);
+      }
+    });
+  }
+
+  function escapeHtml(str){
+    if(!str && str!==0) return '';
+    return String(str).replace(/[&<>"']/g, (s) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[s]));
+  }
+
+  // MENU ROW helper (Option A style: [name][price](+))
+  function createMenuRow(name='', price=''){
+    const row = document.createElement('div');
+    row.className = 'menu-row';
+    row.innerHTML = `
+      <input type="text" class="form-control menu-name" placeholder="Menu item name" value="${escapeAttr(name)} ">
+      <input type="text" class="form-control menu-price" placeholder="Price (e.g. 120)" value="${escapeAttr(price)}" style="max-width:100px;">
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline-success btn-compact add-row-btn" title="Add row">+</button>
+        <button type="button" class="btn btn-outline-danger btn-compact remove-row-btn" title="Remove row">🗑</button>
+      </div>
+    `;
+    return row;
+  }
+
+  function escapeAttr(s){ if(!s && s!==0) return ''; return String(s).replace(/"/g,'&quot;'); }
+
+  // initialize add modal with one row
+  const svcMenuRows = document.getElementById('svc_menu_rows');
+  function initAddModalRows(){
+    svcMenuRows.innerHTML = '';
+    svcMenuRows.appendChild(createMenuRow());
+  }
+  initAddModalRows();
+
+  // Event delegation for add modal menu actions
+  document.getElementById('addServiceModal').addEventListener('click', (ev) => {
+    if(ev.target.matches('.add-row-btn')){
+      const parent = ev.target.closest('.menu-row');
+      const newRow = createMenuRow();
+      parent.insertAdjacentElement('afterend', newRow);
+    } else if(ev.target.matches('.remove-row-btn')){
+      const parent = ev.target.closest('.menu-row');
+      if(parent){
+        const container = parent.parentNode;
+        if(container.querySelectorAll('.menu-row').length > 1){
+          parent.remove();
+        } else {
+          parent.querySelector('.menu-name').value = '';
+          parent.querySelector('.menu-price').value = '';
+        }
+      }
+    }
+  });
+
+  // Edit modal menu row delegation
+  document.getElementById('editServiceModal').addEventListener('click', (ev) => {
+    if(ev.target.matches('.add-row-btn')){
+      const parent = ev.target.closest('.menu-row');
+      const newRow = createMenuRow();
+      parent.insertAdjacentElement('afterend', newRow);
+    } else if(ev.target.matches('.remove-row-btn')){
+      const parent = ev.target.closest('.menu-row');
+      if(parent){
+        const container = parent.parentNode;
+        if(container.querySelectorAll('.menu-row').length > 1){
+          parent.remove();
+        } else {
+          parent.querySelector('.menu-name').value = '';
+          parent.querySelector('.menu-price').value = '';
+        }
+      }
+    }
+  });
+
+  // Save new service
+  document.getElementById('saveServiceBtn').addEventListener('click', () => {
+    const name = document.getElementById('svc_name').value.trim();
+    if(!name){ alert('Service name required'); return; }
+    const type = document.getElementById('svc_type').value;
+    const desc = document.getElementById('svc_desc').value;
+    const addr = document.getElementById('svc_addr').value;
+    const phone = document.getElementById('svc_phone').value;
+    const openTime = document.getElementById('svc_open_time').value;
+    const closeTime = document.getElementById('svc_close_time').value;
+
+    const menuNodes = Array.from(document.querySelectorAll('#svc_menu_rows .menu-row'));
+    const menuItems = menuNodes.map(n => {
+      return { name: n.querySelector('.menu-name').value.trim(), price: n.querySelector('.menu-price').value.trim() };
+    }).filter(i => i.name || i.price);
+
+    // image preview if selected
+    const imgInput = document.getElementById('svc_image');
+    if(imgInput.files && imgInput.files[0]){
+      const reader = new FileReader();
+      reader.onload = function(e){
+        const svc = {
+          id: uid('svc'),
+          name, type, desc, address: addr, phone,
+          openTime, closeTime, menu: menuItems, imageData: e.target.result, website: '', rating: '', reviews: 0
+        };
+        services.unshift(svc);
+        saveServices();
+        renderServices();
+        bootstrap.Modal.getInstance(document.getElementById('addServiceModal')).hide();
+        document.getElementById('addServiceForm').reset();
+        initAddModalRows();
+      };
+      reader.readAsDataURL(imgInput.files[0]);
+    } else {
+      const svc = {
+        id: uid('svc'),
+        name, type, desc, address: addr, phone,
+        openTime, closeTime, menu: menuItems, imageData: '', website: '', rating: '', reviews: 0
+      };
+      services.unshift(svc);
+      saveServices();
+      renderServices();
+      bootstrap.Modal.getInstance(document.getElementById('addServiceModal')).hide();
+      document.getElementById('addServiceForm').reset();
+      initAddModalRows();
+    }
+  });
+
+  // Delete & Edit actions (event delegation on servicesRow)
+  servicesRow.addEventListener('click', (ev) => {
+    const delBtn = ev.target.closest('.delete-svc-btn');
+    if(delBtn){
+      const id = delBtn.getAttribute('data-id');
+      if(confirm('Delete this service?')) {
+        services = services.filter(s => s.id !== id);
+        saveServices();
+        renderServices();
+      }
+      return;
+    }
+
+    const editBtn = ev.target.closest('.edit-svc-btn');
+    if(editBtn){
+      const id = editBtn.getAttribute('data-id');
+      const svc = services.find(s => s.id === id);
+      if(!svc) return;
+      document.getElementById('edit_svc_id').value = svc.id;
+      document.getElementById('edit_svc_name').value = svc.name || '';
+      document.getElementById('edit_svc_type').value = svc.type || '';
+      document.getElementById('edit_svc_desc').value = svc.desc || svc.description || '';
+      document.getElementById('edit_svc_addr').value = svc.address || '';
+      document.getElementById('edit_svc_phone').value = svc.phone || '';
+      document.getElementById('edit_svc_open').value = svc.openTime || '';
+      document.getElementById('edit_svc_close').value = svc.closeTime || '';
+
+      const editRows = document.getElementById('edit_svc_menu_rows');
+      editRows.innerHTML = '';
+      if(svc.menu && svc.menu.length){
+        svc.menu.forEach(it => editRows.appendChild(createMenuRow(it.name, it.price)));
+      } else {
+        editRows.appendChild(createMenuRow());
+      }
+
+      const editModal = new bootstrap.Modal(document.getElementById('editServiceModal'));
+      editModal.show();
+    }
+  });
+
+  document.getElementById('updateServiceBtn').addEventListener('click', () => {
+    const id = document.getElementById('edit_svc_id').value;
+    const idx = services.findIndex(s => s.id === id);
+    if(idx === -1) return;
+
+    const name = document.getElementById('edit_svc_name').value.trim();
+    const type = document.getElementById('edit_svc_type').value;
+    const desc = document.getElementById('edit_svc_desc').value;
+    const addr = document.getElementById('edit_svc_addr').value;
+    const phone = document.getElementById('edit_svc_phone').value;
+    const openTime = document.getElementById('edit_svc_open').value;
+    const closeTime = document.getElementById('edit_svc_close').value;
+
+    const menuNodes = Array.from(document.querySelectorAll('#edit_svc_menu_rows .menu-row'));
+    const menuItems = menuNodes.map(n => ({ name: n.querySelector('.menu-name').value.trim(), price: n.querySelector('.menu-price').value.trim() })).filter(i => i.name || i.price);
+
+    // optionally update image if user uploads in edit modal (not included here for simplicity)
+    const svc = services[idx];
+    svc.name = name;
+    svc.type = type;
+    svc.desc = desc;
+    svc.address = addr;
+    svc.phone = phone;
+    svc.openTime = openTime;
+    svc.closeTime = closeTime;
+    svc.menu = menuItems;
+    services[idx] = svc;
+    saveServices();
+    renderServices();
+    bootstrap.Modal.getInstance(document.getElementById('editServiceModal')).hide();
+  });
+
+  // When opening Add Modal, ensure at least one menu row present
+  document.getElementById('openAddServiceBtn').addEventListener('click', () =>{
+    initAddModalRows();
+  });
+
+  // Initial render (load examples if none)
+  if(services.length === 0){
+    // seed some sample services to show UI immediately
+    services = [
+      {
+        id: uid('svc'),
+        name: 'QuickFix Plumbers', type: 'Plumbing', desc: '', address: '23 Park Avenue, Ahmedabad, GJ 380015', phone: '+91 98765 43210',
+        openTime: '09:00', closeTime: '20:00',
+        menu: [{name:'Service Charge', price:'200'}, {name:'Emergency Visit', price:'500'}],
+        imageData: '',
+        website: 'https://quickfixplumbers.com',
+        rating: '6.5', reviews: 3
+      },
+      {
+        id: uid('svc'),
+        name: 'Bright Electricians', type: 'Electrical', desc: '', address: '56 MG Road, Surat, GJ 395007', phone: '+91 98123 45678',
+        openTime: '08:00', closeTime: '21:00',
+        menu: [{name:'Wiring Inspection', price:'400'}, {name:'Switch Replacement', price:'150'}],
+        imageData: '',
+        website: 'https://brightelectricians.com',
+        rating: '7.8', reviews: 5
+      },
+      {
+        id: uid('svc'),
+        name: 'CleanPro Services', type: 'Cleaning', desc: '', address: '22 Ring Road, Baroda, GJ 390002', phone: '+91 98765 12345',
+        openTime: '07:30', closeTime: '19:30',
+        menu: [{name:'Full Home Clean', price:'1200'}, {name:'Sofa Shampoo', price:'600'}],
+        imageData: '',
+        website: 'https://cleanpro.in',
+        rating: '9.1', reviews: 12
+      }
+    ];
+    saveServices();
+  }
+
+  renderServices();
+
+  // small profile save (demo)
+  document.getElementById('saveProfileBtn').addEventListener('click', () => {
+    const name = document.getElementById('pf_name').value.trim();
+    alert('Profile saved (frontend demo): ' + name);
+  });
+
+})();
+</script>
+</body>
+</html>
