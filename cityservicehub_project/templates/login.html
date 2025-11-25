@@ -48,13 +48,15 @@
         </div>
 
         <div class="text-end mb-3">
-          <a href="forget.html" class="text-pink small">Forgot Password?</a>
+          <a href="{%url 'forget'%}" class="text-pink small">Forgot Password?</a>
         </div>
 
-        <button type="submit" class="btn btn-pink w-100">Login</button>
+        <button type="submit" class="btn btn-pink w-100"> <a href="{%url 'service_provider'%}" class="text-pink">Login</a></button>
 
         <p class="text-light mt-3">
+
           Don’t have an account? <a href="{%url 'register'%}" class="text-pink">Register</a>
+
         </p>
       </form>
     </div>
